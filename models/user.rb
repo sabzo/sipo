@@ -33,19 +33,15 @@ class User < Api
       :updated_at,
       :subscription_plan_id
     ]
-     # Filter hash for args
-     # Nothing fancy just shortcutting having to do variable = value many times!
-
+    # Notice I'm creating the instance variables in the parent class.
+    # First I tell the parent API about my Mongo collection which represents this class
     @COLLECTION_NAME = 'users'
+    # Now I pass in the fields that will be used as "filters" and the hash containing
+    # the actual properties I want to set up. When API is done it will return newly created
+    # child instance already populated with the right fields and methods!
     super(@COLLECTION_NAME, fields, hash, self)
   end
 
-  def self.encryptPassword(plain)
-    BCrypt::Password.create(plain)
-  end
-
-  def authenticate(doc={})
-    find_one(doc)
-  end
+  # This class inherits all the parent API methods.
 
 end

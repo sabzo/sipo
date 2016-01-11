@@ -1,6 +1,6 @@
 # This is the master API. All API Models inherit from this class
 # Most of the core and complexity resides in this class!
-# After DB operations the API updates the state of the class
+# After any DB operations the API updates the state of the class.
 class Api
    # Every API object will have an ID (after database retrieval)
    # doc represents the doc (properties) of the current object
