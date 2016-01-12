@@ -56,7 +56,12 @@ class Api
     # Filter hash
     @fields.each do |e|
       if doc.include? e
-        doc[e] = Api.encryptPassword(doc[e]) if e == :password
+        if e == :password
+         # If it's already a hashed password don't rehash!
+         # doc[e] is a String, determine if it's Bcrypt hash
+         BCrypt::Password.new(doc[e])
+         doc[e] = Api.encryptPassword(doc[e]) unless BCrypt::Password.new(doc[e]) rescue nil
+        end
         instance_variable_set( "@#{e.to_s}", doc[e] )
         @doc[e] = doc[e]
       end

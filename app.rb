@@ -27,13 +27,15 @@ class App < Sinatra::Base
      # Since request is valid, let's authenticate it
      def authenticate!
        req = request.body
-       u = User.new().find_one(
-         {
-           email: @json['email'],
-           password: User.encryptPassword(@json['password'])
-         })
+       u = User.new().find_one({email: @json['email']})
+       p "u.password #{u.password}"
+
+       if u.id && ( BCrypt::Password.new(u.password) == @json['password'])
+          success!(u)
+       else
+          throw(:warden)
+       end
        # Based on results of u `fail` or `approve the request`
-       u.id.nil? ? throw(:warden) : success!(u)
      end
    end
 
@@ -57,6 +59,7 @@ class App < Sinatra::Base
    # Authenticate a user
    post '/auth/login' do
      env['warden'].authenticate(:password)
+     json({ message: "Successfully logged in bruh!"})
    end
    # Response page when user is unauthenticated
    post '/auth/unauthenticated' do
