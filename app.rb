@@ -21,16 +21,23 @@ class App < Sinatra::Base
      # If the request parameters contain 'username' or 'email' user is probably
      # trying to access an authenticated resource
      def valid?
-       @json = JSON.parse( request.body.read ) if request.post?
-       @json['username'] || @json['email']
+       if request.post?
+         @json = JSON.parse( request.body.read )
+         @json['username'] || @json['email']
+       elsif request.get?
+         # use params
+       end
+
      end
      # Since request is valid, let's authenticate it
      def authenticate!
        req = request.body
        u = User.new().find_one({email: @json['email']})
-       p "u.password #{u.password}"
 
        if u.id && ( BCrypt::Password.new(u.password) == @json['password'])
+          #.set_user(u.id, scope: :user)
+          # Store logged in user
+          @user = u
           success!(u)
        else
           throw(:warden)
@@ -58,7 +65,9 @@ class App < Sinatra::Base
 
    # Authenticate a user
    post '/auth/login' do
-     env['warden'].authenticate(:password)
+     unless env['warden'].authenticated?(:user)
+      env['warden'].authenticate(:password)
+     end
      json({ message: "Successfully logged in bruh!"})
    end
    # Response page when user is unauthenticated

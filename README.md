@@ -1,4 +1,4 @@
-# Sipo  -  Sinatra MognoDB Starter Code
+# Sipo  -  Sinatra MongoDB Starter Code
 
 ## API
 Sipo uses Sinatra framework, warden for Authentication
@@ -12,13 +12,18 @@ This is simply minimalistic starter code to be used for a simple Ruby MongoDB we
  # Can simply use a Rack Server to run or in irb for example you can do the following
  # include the API starting point
  require_relative 'app'
+
  # Creates a new user and encrypts the plaintext password
  u = User.new( {email: 'email@example.com', password: 'plainText'})
+
  # Create a new user and save (insert) into database
  u1 = User.new( {email: 'email@example.com', password: 'plainText'}).insert()
+
  # get Email or User of this object is simple as using the fields of the object
  u1.email # returns email@example.com
+
  u1.password # returns $2a$10$NyxVqdcX8gD4a1kuFhoRuO6ZiH6sklRjFYjAywWllbW7HZ910FgFm
+ 
  # Retrieve a User from the Database and return a user object
  u2 = User.new().find_one( {email: 'email4@example.com'} )
 ```
