@@ -13,6 +13,9 @@ class Api
      @COLLECTION_NAME = collection_name
      # A list arguments to be used for filtering the fields MongoDB will accept
      @fields = fields
+     # allow ID to be inserted if user chooses so. Only usesful when needing to delete
+     # Don't use for inserting, rather let MongoDB create its own IDs
+     @fields << :_id # allows a user to pass in a ID when RETRIEVING or DELETING
      # A hash a user passes is containing the instance variables {'variable' => 'value'}
      @params = params
      # A hash representing all the variables for this particular instance
@@ -81,6 +84,19 @@ class Api
     update_doc = {:$set => doc}
     @collection.update_one(key, update_doc)
     return @child
+  end
+
+  # Remove a Document based on a key hash or a passed in id hash {}
+  def remove_one(key = {})
+    if !key.is_a?(Hash)
+      raise "doc is not a Hash"
+    end
+    # if a key doc wasn't provided use internal ID. Assumes @id exists from DB
+    key = key.empty?() ? {_id: @doc[:_id]} : key
+    if key.include?(:_id)
+      key[:_id] = BSON::ObjectId(key[:_id])
+      @collection.delete_one(key)
+    end
   end
 
   ### Helpers

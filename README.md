@@ -23,9 +23,17 @@ This is simply minimalistic starter code to be used for a simple Ruby MongoDB we
  u1.email # returns email@example.com
 
  u1.password # returns $2a$10$NyxVqdcX8gD4a1kuFhoRuO6ZiH6sklRjFYjAywWllbW7HZ910FgFm
- 
+
  # Retrieve a User from the Database and return a user object
  u2 = User.new().find_one( {email: 'email4@example.com'} )
+
+ # Remove a user (or any other object from a collection) ex:
+ r = User.new({_id: '569809fda2dc7acb80000000'}).remove_one()
+
+# Update a User by an email address
+# If no key is passed in (1st param to `update()`) then Api will use internal @id
+# When updating, an @id must already exist (since the doc was created & saved to DB)
+u = User.new({email: 's@s'}).update({}, {email: 's@m'})
 ```
 
 * Sinatra - Ruby Framework
