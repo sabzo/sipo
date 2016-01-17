@@ -114,7 +114,11 @@ class Api
         if e == :password
          # If it's already a hashed password don't rehash!
          # doc[e] is a String, determine if it's Bcrypt hash
-         doc[e] = Api.encryptPassword(doc[e]) unless BCrypt::Password.new(doc[e]) rescue nil
+         begin
+          BCrypt::Password.new(doc[e])
+         rescue => ex
+          doc[e] = Api.encryptPassword(doc[e])
+         end
         end
         instance_variable_set( "@#{e.to_s}", doc[e] )
         @doc[e] = doc[e]

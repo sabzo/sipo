@@ -88,16 +88,29 @@ class App < Sinatra::Base
     p "APP v 1.0"
    end
 
-   # Get a particular article
-   get '/user/:id' do |id|
+   # Get a particular User
+   get '/user/:id' do
       # First Authenticate before retrieving a user
       env['warden'].authenticate(:password)
-      #
+      json = getJSONFromRequest()
+
      u = User.new().find_one(
        {
-         email: @json['email'],
-         password: User.encryptPassword(@json['password'])
+         email: json[:email]
        })
+
+     # really long, but if user was found return the user doc in JSON or return this error message
+     if u.id && ( BCrypt::Password.new(u.password) == json[:password])
+       return json(u.doc)
+     else
+       msg = {message: "The email or password you entered is incorrect"}
+       return json(msg)
+     end
+   end
+   # Create a new user
+   post '/user' do
+    json = getJSONFromRequest()
+    u = User.new(json).insert()
    end
 
  end
