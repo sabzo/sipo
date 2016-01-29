@@ -63,6 +63,20 @@ class App < Sinatra::Base
      env['REQUEST_METHOD'] = 'POST'
    end
 
+   # for CORS some browsers first send an options request
+   options "*" do
+     response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
+     response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept"
+     200
+   end
+
+  before do
+    # in the future '*' can be www.example.org to only allow users from example.org
+    headers 'Access-Control-Allow-Origin' => '*',
+         'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST', 'UPDATE'],
+         'Access-Control-Allow-Headers' => ['Content-Type', 'Accept', 'X-Requested-With', 'access_token']
+    end
+
    # Authenticate a user
    post '/auth/login' do
      unless env['warden'].authenticated?(:user)
