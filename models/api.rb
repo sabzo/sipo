@@ -83,7 +83,6 @@ class Api
     doc = @doc unless doc
     update_doc = {:$set => doc}
     @collection.update_one(key, update_doc)
-    return @child
   end
 
   # Remove a Document based on a key hash or a passed in id hash {}

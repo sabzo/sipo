@@ -149,18 +149,14 @@ class App < Sinatra::Base
     json = getJSONFromRequest()
     u = User.new(json).insert()
    end
-
    ## Reset Password
    post '/user/reset' do
      @json = getJSONFromRequest()
      u = User.new().find_one({ email: @json[:email]})
-     if u.id # if object has an id then 'obviously' it came from the database
-       random_password = Array.new(10).map { (65 + rand(58)).chr }.join
-       # sendgrid, mailchimp, or mail to  send random password
-       # https://github.com/mikel/mail
-       msg = {message: "Sent temporary password to #{@json[:email]}"}
+     if u.id
+       msg = u.reset_password()
      else
-      msg = {message: "Unable to reset password for #{ @json[:email]}"}
+       msg = {message: "Unable to reset password for #{ @json[:email]}"}
      end
      json(msg)
    end
