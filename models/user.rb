@@ -48,6 +48,35 @@ class User < Api
     super(@COLLECTION_NAME, fields, hash, self)
   end
 
-  # This class inherits all the parent API methods.
+  # Reset a User's password
+  # User receives a randomly generated Password
+  # At a later point user can change her password
+  def reset_password
+   client = SendGrid::Client.new(api_key: ENV['SENDGRID_MILCHIMP_MAILER_APIKEY'])
+   random_password = Array.new(10).map { (65 + rand(58)).chr }.join
+   result = update({}, {password: Api.encryptPassword(random_password)} ).to_a
+   # Use either sendgrid, mailchimp, or mail to  send random password
+   # https://github.com/mikel/mail
+   # IF USING SENDGRID mail hash block would look like this:
+   # mail = SendGrid::Mail.new do |m|
+   #   m.to = @email
+   #   m.from = admin_email
+   #   m.subject = 'Admin: Password Reset'
+   #   m.text = text
+   # end
+   #res = client.send(mail) # assume client is a Sendgrid/Mailchimp/Mailer Object
+   # reference: https://github.com/sendgrid/sendgrid-ruby
+   res = {} # response result when sending mail
+   res['code'] == 200 # simulate a successful, ADJUST THIS ACCORDINGLY!
+   if res['code'] == 200 and result[0]["ok"] == 1 # if mail and DB update successful
+       msg = {message: "Sent temporary password to #{@email}"}
+     else
+       msg = res.body
+     end
+   rescue Exception => e
+     msg = {message: "Error Reseting Email"}
+   end
+   msg # return message
+  end
 
 end
