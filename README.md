@@ -33,7 +33,7 @@ This is simply minimalistic starter code to be used for a simple Ruby MongoDB we
 # Update a User by an email address
 # If no key is passed in (1st param to `update()`) then Api will use internal @id
 # When updating, an @id must already exist (since the doc was created & saved to DB)
-u = User.new({email: 's@s'}).update({}, {email: 's@m'})
+u = User.new().update({email: 's@s'}, {email: 's@m'})
 
 # Remove a user (or any other object from a collection) ex:
 r = User.new({_id: '569809fda2dc7acb80000000'}).remove_one()

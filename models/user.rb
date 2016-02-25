@@ -25,13 +25,19 @@ class User < Api
       :firstname,
       :lastname,
       :email,
-      :password,
+      :password, #encrypted_password
+      :sign_in_count,
+      :role,
       :city,
       :state,
       :country,
       :created_at,
       :updated_at,
-      :subscription_plan_id
+      :subscription_plan_id,
+      :trial_period_end_date,
+      :phone_number,
+      :billing_address,
+
     ]
     # Notice I'm creating the instance variables in the parent class.
     # First I tell the parent API about my Mongo collection which represents this class

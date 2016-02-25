@@ -6,6 +6,12 @@
 class Api
    # Every API object will have an ID (after database retrieval)
    # doc represents the doc (properties) of the current object
+   # @param collection_name (string)
+   # => The Mongo Collection (MySQL table)
+   # @param fields (hash) ex: {a: "key 'a' is a symbol"}
+   # => The document attributes to be used as filtering
+   # @param params (hash)
+   # => The fields and values that create the document. Keys are symbols.
    attr_reader :id, :doc, :created_at, :updated_at
    def initialize(collection_name, fields, params={}, child)
      DBSetup()
@@ -58,6 +64,7 @@ class Api
       document['_id'] = str_id
       @id = str_id
    end
+   # update the object with the Mongo document just retrieved
    update_instance_state(@doc)
    return @child
   end
@@ -73,17 +80,23 @@ class Api
   # Update a Document by it's BsonID
   # BSON ID by the time you need to update a document should be in @id
   # Updating a doc means it ALREADY has an @id
-  def update(key = {}, doc = {})
-    if !doc.is_a?(Hash) && !key.is_a?(Hash) && doc.empty?
-      raise "doc is not a Hash"
+  def update(key = {}, doc)
+    if !doc.is_a?(Hash) || !key.is_a?(Hash)
+      raise "'doc' in update(key, doc) is not a Hash or is empty"
+    elsif doc.empty?
+      return
     end
     # If the user hasn't specified a key to update a document, use @id
-    key = {_id: BSON::ObjectId(@id)} if key.empty?
+     if key.empty?
+      key = {_id: BSON::ObjectId(@id)}
+     else # convert string _id into BSON::ID
+      key[:_id] = BSON::ObjectId( key[:_id] )
+     end
     # update using doc passed in or internal state @doc
     doc = @doc unless doc
-    update_doc = {:$set => doc}
-    @collection.update_one(key, update_doc)
-    return @child
+    # If there's no update specifier ($push, $inc, $set) then default to $set
+    doc = {:$set => doc} unless !doc.has_key? :$set
+    @collection.update_one(key, doc)
   end
 
   # Remove a Document based on a key hash or a passed in id hash {}
@@ -120,13 +133,14 @@ class Api
           doc[e] = Api.encryptPassword(doc[e])
          end
         end
+        # Although using symbols to represent keys, instance variables by Ruby rule can't be symbols
         instance_variable_set( "@#{e.to_s}", doc[e] )
         @doc[e] = doc[e]
       end
     end
   end
 
-  # Static to easily encrypt password
+  # Static function to easily encrypt password
   def self.encryptPassword(plain)
     BCrypt::Password.create(plain)
   end
