@@ -52,7 +52,7 @@ u = User.new({email: 's@s'}).update({}, {email: 's@m'})
 
 ## License
 
-    Copyright [2015] [Sabelo Mhlambi]
+    Copyright [2016] [Sabelo Mhlambi]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
