@@ -70,13 +70,9 @@ class User < Api
    res['code'] == 200 # simulate a successful, ADJUST THIS ACCORDINGLY!
    if res['code'] == 200 and result[0]["ok"] == 1 # if mail and DB update successful
        msg = {message: "Sent temporary password to #{@email}"}
-     else
+   else
        msg = res.body
-     end
-   rescue Exception => e
-     msg = {message: "Error Reseting Email"}
    end
    msg # return message
   end
-
 end
