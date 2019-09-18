@@ -10,7 +10,9 @@ class MongoConnect
     @host = ENV['HOST']
     @port = ENV['PORT']
     @database = ENV['DATABASE']
-    @uri = "mongodb://#{username}:#{password}@#{host}:#{port}/#{database}"
+    @uri = ENV['URI'] if ENV['URI']
+
+    @uri ||= "mongodb://#{username}:#{password}@#{host}:#{port}/#{database}"
     # connect to MongoLab instance
     connect()
   end

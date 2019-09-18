@@ -9,6 +9,8 @@ This is simply minimalistic starter code to be used for a simple Ruby MongoDB we
 
 ```ruby
  # BEFORE ANYTHING set up Environment Varaibles for MongoDB connection!! -- mongoconnect.rb
+example connection to mongo cluser:
+`export URI= 'mongodb+srv://<username>:<password>@<cluster-url>/<database>?retryWrites=true&w=majority'`
  # Can simply use a Rack Server to run or in irb for example you can do the following
  # include the API starting point
  require_relative 'app'
