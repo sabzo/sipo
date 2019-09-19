@@ -6,7 +6,12 @@ require 'json'
 # authentication
 require 'warden'
 # import models in the 'models sub directory'
-Dir["./models/*.rb"].each { |file| require file }
+if File.exist?("models/api.rb") 
+  require_relative "models/api.rb"
+  Dir["./models/*.rb"].each { |file| require file }
+else
+  raise "Missing api.rb in models folder" 
+end
 
 # Create Routes for API
 class App < Sinatra::Base
