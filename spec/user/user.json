@@ -1,0 +1,11 @@
+{
+"firstname": "fname",
+"lastname": "lname",
+"email": "email@example.com",
+"password": "password",
+"city": "city",
+"state": "state",
+"country": "usa",
+"created_at": "0",
+"updated_at": 0
+}

@@ -11,7 +11,7 @@ class Api
    # @param fields (hash) ex: {a: "key 'a' is a symbol"}
    # => The document attributes to be used as filtering
    # @param params (hash)
-   # => The fields and values that create the document. Keys are symbols.
+   # => The fields and values that create the document. Keys are symbols..
    attr_reader :id, :doc, :created_at, :updated_at
    def initialize(collection_name, fields, params={}, child)
      DBSetup()
@@ -38,6 +38,7 @@ class Api
   # Save Article to to DB using current internal state or arbitrary hash
   def insert(doc = @doc)
     doc['created_at'] = Time.now.utc
+    doc[:_id] = BSON::ObjectId.new()
     res = @collection.insert_one(doc)
 
     # TODO don't forget to error check res before returning @child!
@@ -93,9 +94,7 @@ class Api
       key[:_id] = BSON::ObjectId( key[:_id] )
      end
     # update using doc passed in or internal state @doc
-    doc = @doc unless doc
-    # If there's no update specifier ($push, $inc, $set) then default to $set
-    doc = {:$set => doc} unless !doc.has_key? :$set
+    doc = @doc unless doc # If there's no update specifier ($push, $inc, $set) then default to $set doc = {:$set => doc} unless !doc.has_key? :$set
     @collection.update_one(key, doc)
   end
 
@@ -144,5 +143,4 @@ class Api
   def self.encryptPassword(plain)
     BCrypt::Password.create(plain)
   end
-
 end
