@@ -46,18 +46,28 @@ r = User.new({_id: '569809fda2dc7acb80000000'}).remove_one()
 u = User.new({email: 's@s'}).update({}, {email: 's@m'})
 ```
 
+## RESTful API 
+This code maybe run using a webserver such as [Unicorn](https://bogomips.org/unicorn/).
+An ideal setup may include using NGINX as a _reverse proxy_ which will route requests
+to Unicorn. 
+
+### Routes
+User
+
+* http POST #0.0.0.0:8080/user < user.json
+
+### Open Source
 * Sinatra - Ruby Framework
 * gem install sinatra-contrib
 * Mongo - MongoDB library
-* [https://github.com/codahale/bcrypt-ruby] (bcrypt-ruby) -  same password library Devise and other Ruby authentication libraries use.
-* [https://github.com/hassox/warden/wiki]) (Warden) -  # The same authentication library Devise and other Ruby authentication libraries use
+* [https://github.com/codahale/bcrypt-ruby](bcrypt-ruby) -  same password library Devise and other Ruby authentication libraries use.
+* [https://github.com/hassox/warden/wiki])(Warden) -  # The same authentication library Devise and other Ruby authentication libraries use
 
 ## License
 
-    Copyright [2016] [Sabelo Mhlambi]
+    Copyright [2019] [Sabelo Mhlambi]
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
 
         http://www.apache.org/licenses/LICENSE-2.0

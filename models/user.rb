@@ -13,7 +13,6 @@ class User < Api
     :country,
     :created_at,
     :updated_at,
-    :subscription_plan_id
   ]
   # doc is inherited from parent, represents the BSON doc
   attr_reader :articles
@@ -33,11 +32,7 @@ class User < Api
       :country,
       :created_at,
       :updated_at,
-      :subscription_plan_id,
-      :trial_period_end_date,
       :phone_number,
-      :billing_address,
-
     ]
     # Notice I'm creating the instance variables in the parent class.
     # First I tell the parent API about my Mongo collection which represents this class
