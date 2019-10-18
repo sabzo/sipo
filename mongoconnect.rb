@@ -12,6 +12,8 @@ class MongoConnect
     @database = ENV['DATABASE']
     @uri = ENV['URI'] if ENV['URI']
 
+    raise("Missing MongoDB connection details") unless @uri || (@uri or @password or @host or @port or @database)
+    
     @uri ||= "mongodb://#{username}:#{password}@#{host}:#{port}/#{database}"
     # connect to MongoLab instance
     connect()
