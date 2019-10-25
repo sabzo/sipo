@@ -3,8 +3,10 @@ services:
   app:
     build: .   
     command: "unicorn"
+    environment:
+     - URI=${URI}
+
     ports:
       - "8080:8080"
-    
   mongo:
     image: "mongo"
