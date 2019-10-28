@@ -2,6 +2,7 @@
 require 'sinatra/base'
 # sinatra-contrib helper modules
 require 'sinatra/json'
+require 'sinatra/cross_origin'
 require 'json'
 # authentication
 require 'warden'
@@ -18,6 +19,14 @@ class App < Sinatra::Base
    enable :sessions
    set :root, File.dirname(__FILE__)
    set :session_secret, "supersecret"
+   set :bind, '0.0.0.0'
+
+   configure do
+    enable :cross_origin
+   end
+    before do
+      response.headers['Access-Control-Allow-Origin'] = '*'
+    end
 
    ###
    ## SETUP THE AUTHENTICATION for the API
